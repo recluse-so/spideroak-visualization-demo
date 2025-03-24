@@ -6,6 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
+  background-color: #000000;
 }
 
 code {
@@ -24,4 +25,13 @@ html, body, #root {
   width: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
+}
+
+/* Cesium container needs to take up full space */
+.cesium-widget,
+.cesium-widget canvas {
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none;
 }

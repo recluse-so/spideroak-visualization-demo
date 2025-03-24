@@ -1,0 +1,10 @@
+# create python gitignore
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw   
+
+# create node gitignore
+node_modules/

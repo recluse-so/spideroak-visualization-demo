@@ -29,11 +29,13 @@ export const connectToWebSocketServer = (handlers) => {
   if (onMessage) {
     ws.onmessage = (event) => {
       try {
-        // Replace Python's single quotes with double quotes for JSON.parse
-        const data = JSON.parse(event.data.replace(/'/g, '"'));
+        // Parse the incoming data as JSON
+        const data = JSON.parse(event.data);
+        console.log('Received satellite data:', data); // Add logging for debugging
         onMessage(data);
       } catch (error) {
         console.error('Error parsing satellite data:', error);
+        console.error('Raw data received:', event.data);
       }
     };
   }

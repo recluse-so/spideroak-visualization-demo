@@ -252,4 +252,186 @@ To enhance the application, consider:
 
 ---
 
+## 🖥️ Comprehensive Guide to Running Locally
+
+This section provides a detailed, step-by-step guide to get the satellite tracker up and running on your local machine.
+
+### System Requirements
+
+- **Operating System**: Windows 10+, macOS 10.15+, or Linux (Ubuntu 20.04+ recommended)
+- **RAM**: 4GB minimum, 8GB+ recommended for smooth Cesium rendering
+- **Disk Space**: At least 1GB free space
+- **Internet Connection**: Required for Cesium ion access and TLE data retrieval
+
+### Installing Dependencies
+
+#### Backend Dependencies
+
+1. **Python Setup**:
+   ```bash
+   # Check your Python version (should be 3.8+)
+   python --version
+   
+   # Create a virtual environment
+   python -m venv venv
+   
+   # Activate virtual environment
+   # On macOS/Linux:
+   source venv/bin/activate
+   # On Windows:
+   venv\Scripts\activate
+   ```
+
+2. **Install Python Packages**:
+   ```bash
+   # Install FastAPI and dependencies
+   pip install fastapi uvicorn[standard]
+   
+   # Install astronomy libraries
+   pip install poliastro astropy
+   
+   # Install other utilities
+   pip install requests websockets
+   ```
+
+#### Frontend Dependencies
+
+1. **Node.js Setup**:
+
+   ```bash
+   # Check your Node.js version (should be 14+)
+   node --version
+   npm --version
+   ```
+
+2. **Install React and Cesium Dependencies**:
+   ```bash
+   # Navigate to the frontend directory
+   cd dashboard/resium
+   
+   # Install dependencies
+   npm install
+   
+   # Install specific Cesium/Resium packages
+   npm install cesium resium
+   ```
+
+### Environment Configuration
+
+1. **Cesium Ion Token**:
+   - Create an account at [https://cesium.com/ion/](https://cesium.com/ion/)
+   - Get your access token from the dashboard
+   - Update the token in `dashboard/resium/src/components/CesiumViewer.jsx`
+
+2. **Backend Configuration**:
+   - Create a `.env` file in the project root with the following:
+   ```
+   FASTAPI_HOST=localhost
+   FASTAPI_PORT=8000
+   ```
+
+### Starting the Application
+
+#### 1. Start the Backend Server
+
+```bash
+# Make sure you're in the project root and virtual environment is activated
+cd /path/to/satellite-tracker
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+
+# Start the FastAPI server
+uvicorn api.websocket:app --reload --host 0.0.0.0 --port 8000
+```
+
+You should see output similar to:
+```
+INFO:     Started server process [28967]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+```
+
+#### 2. Start the Frontend Development Server
+
+In a new terminal window:
+
+```bash
+# Navigate to the Resium directory
+cd /path/to/satellite-tracker/dashboard/resium
+
+# Start the React development server
+npm start
+```
+
+Your default browser should automatically open to `http://localhost:3000` with the application running.
+
+### Verifying Everything Works
+
+1. **Check WebSocket Connection**:
+   - Open your browser's developer tools (F12 or Ctrl+Shift+I)
+   - Go to the Console tab
+   - Look for the message: "Connected to satellite tracking server"
+
+2. **Verify Visualization**:
+   - You should see the Earth rendered in the Cesium viewer
+   - A blue satellite point should appear and move along its orbit
+   - The connection status indicator should show "Connected" with a green dot
+
+3. **Test Controls**:
+   - Try toggling the "Auto-track satellite" switch
+   - Click the "Reset View" button to reset the camera position
+
+### Troubleshooting Common Issues
+
+#### Backend Issues
+
+1. **Port Already in Use**:
+   ```
+   ERROR:    [Errno 48] Address already in use
+   ```
+   **Solution**: Change the port in the uvicorn command (e.g., `--port 8001`) or find and stop the process using port 8000.
+
+2. **Missing Dependencies**:
+   ```
+   ModuleNotFoundError: No module named 'poliastro'
+   ```
+   **Solution**: Make sure you've installed all required packages with pip.
+
+#### Frontend Issues
+
+1. **WebSocket Connection Error**:
+   ```
+   WebSocket connection to 'ws://localhost:8000/ws' failed
+   ```
+   **Solution**: Ensure the backend server is running and check for any CORS issues.
+
+2. **Cesium Rendering Issues**:
+   ```
+   Error: An error occurred while rendering. Rendering has stopped.
+   ```
+   **Solution**: Verify your Cesium Ion token is valid and check that your graphics drivers are up to date.
+
+### Running in Production Mode
+
+For improved performance in a local production-like environment:
+
+1. **Build the Frontend**:
+   ```bash
+   cd dashboard/resium
+   npm run build
+   ```
+
+2. **Serve the Frontend with a Static Server**:
+   ```bash
+   npx serve -s build
+   ```
+
+3. **Run the Backend with Gunicorn** (Linux/macOS):
+   ```bash
+   pip install gunicorn
+   gunicorn -w 4 -k uvicorn.workers.UvicornWorker api.websocket:app
+   ```
+
+---
+
 This satellite tracking application demonstrates an effective integration of modern web technologies with complex scientific calculations, providing an interactive and educational tool for visualizing satellites in orbit around Earth. 🚀✨
