@@ -5,6 +5,8 @@ __pycache__/
 
 # C extensions
 *.so
+# create the gitignore file to ignore the correct files a node project in the dashboard/resium directory
+dashboard/resium/node_modules/*
 
 # Distribution / packaging
 .Python
